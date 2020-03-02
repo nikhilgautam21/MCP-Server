@@ -1,23 +1,37 @@
-const google = require('../config/google_key.json')
-const {OAuth2Client} = require('google-auth-library');
-const client = new OAuth2Client(google.web.client_id);
+const request = require('request');
+const User = require('../models/userSchema');
+const Complaint = require('../models/complaintSchema')
 
 const googleAuthController = async (req, res, next) => {
-    console.log(req.headers)
-    const ticket = await client.verifyIdToken({
-        idToken: req.headers.bearer,
-        audience: google.web.client_id
-    });
-    const payload = ticket.getPayload();
-    const userid = payload['sub'];
-    res.send(userid)
+    let token = req.headers.bearer
+    request(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${token}`, { json: true }, (err, resp, body) => {
+        User.create({
+            google_id:resp.body.id,
+            name:resp.body.name,
+            email:resp.body.email,
+            role:"user"
+        }).then(function(data){
+            res.send(data)
+        }).catch((err)=>{
+            res.send(err)
+        })
+    }, err => {
+        res.json({
+            status: 400,
+            msg: "Can't authorize"
+        })
+    })
+
 }
 
-const googleAuthCallBackController = async (req, res, next) => {
-
+const addComplaintController = async (req, res, next) => {
+    let complaint = req.body
+    Complaint.create(complaint).then(function(data){
+        res.send(data)
+    })
 }
 
-const yahooController = async (req,res,next) =>{
+const yahooController = async (req, res, next) => {
     res.send("YAHOOOOOOO")
 }
 

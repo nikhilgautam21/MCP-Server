@@ -11,6 +11,8 @@ app.use(bodyParser.json());
 
 const port = process.env.port || "5000";
 
+mongoose.connect('mongodb+srv://nikhil:TOOR123@cluster0-jhtvk.mongodb.net/test?retryWrites=true&w=majority',{useNewUrlParser:true});
+//mongoose.Promise =global.Promise;
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
