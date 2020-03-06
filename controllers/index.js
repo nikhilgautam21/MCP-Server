@@ -1,6 +1,6 @@
 const request = require('request');
 const User = require('../models/userSchema');
-const Complaint = require('../models/complaintSchema')
+
 
 const googleAuthController = async (req, res, next) => {
     let token = req.headers.bearer
@@ -24,19 +24,11 @@ const googleAuthController = async (req, res, next) => {
 
 }
 
-const addComplaintController = async (req, res, next) => {
-    let complaint = req.body
-    Complaint.create(complaint).then(function(data){
-        res.send(data)
-    })
-}
-
 const yahooController = async (req, res, next) => {
-    res.send("YAHOOOOOOO")
+    res.send("YAHOOO")
 }
 
 module.exports = {
     googleAuthController,
-    googleAuthCallBackController,
     yahooController
 }

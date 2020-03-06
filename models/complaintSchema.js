@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const complaintSchema = new mongoose.Schema({
     name:{
@@ -21,9 +22,13 @@ const complaintSchema = new mongoose.Schema({
         type: String,
         required: [true, "notes is required"]
     },
+    status:{
+        type: String,
+        required:[true, "status is required"]
+    },
     userId: {type: Schema.Types.ObjectId, ref: 'User'}
  
 })
 
-const Complaint = mongoose.model('user',complaintSchema);
-module.exports = Complaint;
+//const Complaint = mongoose.model('user', complaintSchema);
+module.exports = complaintSchema;

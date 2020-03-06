@@ -15,8 +15,7 @@ const userSchema = new mongoose.Schema({
     role:{
         type: String,
         required: [true, "role is required"]
-    },
-    complaints: [{type: Schema.Types.ObjectId, ref: 'Complaint'}]
+    }
 })
 
 const User = mongoose.model('user',userSchema);
