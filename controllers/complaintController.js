@@ -11,10 +11,15 @@ const addComplaintController = async (req, res, next) => {
 
 const updateComplaintStatusController = async (req, res, next) => {
     console.log(req.body)
-    let status = req.body.status
     let id = req.body.id
-    res.send("gsgsdg")
-    Complaint.findOneAndUpdate({_id:id},{status:status},(data)=>{
+    let data = req.body.data
+   // res.send("gsgsdg")
+   let options ={
+    useFindAndModify: false,
+    new: true
+   }
+    Complaint.findOneAndUpdate({_id:id},data,options).then(function(data){
+        console.log(data)
         res.send(data)
     })
 }
