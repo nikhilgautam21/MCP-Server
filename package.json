@@ -11,7 +11,11 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "google-auth-library": "^5.10.1",
     "googleapis": "^47.0.0",
-    "mongoose": "^5.9.2"
+    "mongoose": "^5.9.2",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-google-token": "^0.1.2",
+    "request": "^2.88.2"
   }
 }

@@ -1,13 +1,18 @@
 {
     "web": {
-        "client_id": "63027818983-hvl9j4ndbqt01vsto5mohtc7gkeosqro.apps.googleusercontent.com",
+        "client_id": "63027818983-7llhhjrnvkrhou76nudd69nh6rvef5d8.apps.googleusercontent.com",
         "project_id": "mcp-project-269315",
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
         "token_uri": "https://oauth2.googleapis.com/token",
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "client_secret": "-jKltGZA5L4Jg0P-2wr4Hm2M",
+        "client_secret": "HmbQzB-lVo06Lu8wBsTcBVOg",
+        "redirect_uris": [
+            "https://mcp-project-269315.firebaseapp.com/__/auth/handler"
+        ],
         "javascript_origins": [
-            "http://localhost:5000"
+            "http://localhost",
+            "http://localhost:5000",
+            "https://mcp-project-269315.firebaseapp.com"
         ]
     }
 }

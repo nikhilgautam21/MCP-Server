@@ -5,7 +5,6 @@ const {googleAuthCallBackController} = require('../controllers/index')
 const {yahooController} = require('../controllers/index')
 
 router.get('/google', googleAuthController )
-router.get('/google/callback',googleAuthCallBackController)
 router.get('/yahoo', yahooController)
 
 module.exports = router
