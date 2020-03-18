@@ -4,21 +4,40 @@ const User = require('../models/userSchema');
 
 const googleAuthController = async (req, res, next) => {
     let token = req.headers.bearer
-    request(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${token}`, { json: true }, (err, resp, body) => {
-        User.create({
-            google_id:resp.body.id,
-            name:resp.body.name,
-            email:resp.body.email,
-            role:"user"
-        }).then(function(data){
-            res.send(data)
-        }).catch((err)=>{
-            res.send(err)
-        })
+    request(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${token}`, { json: true }, async (err, resp, body) => {
+        let user = await User.findOne({ google_id: resp.body.id })
+        if (user) {
+            const token = user.generateAuthToken();
+            console.log(token,"token IF")
+            res.header("x-auth-token", token).send({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+              });
+        }
+        else {
+            User.create({
+                google_id: resp.body.id,
+                name: resp.body.name,
+                email: resp.body.email,
+                role: "user"
+            }).then(function (data) {
+                res.json({
+                    id: data._id,
+                    name: data.name,
+                    email : data.email,
+                    role : data.role
+                })
+            }).catch((err) => {
+                res.send(err)
+            })
+        }
+
     }, err => {
         res.json({
             status: 400,
-            msg: "Can't authorize"
+            msg: "Can't authorize google access token"
         })
     })
 

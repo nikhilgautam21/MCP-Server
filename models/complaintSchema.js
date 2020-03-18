@@ -26,7 +26,7 @@ const complaintSchema = new mongoose.Schema({
         type: String,
         required:[true, "status is required"]
     },
-    userId: {type: Schema.Types.ObjectId, ref: 'User'}
+    userid: {type: Schema.Types.ObjectId, ref: 'User'}
  
 })
 

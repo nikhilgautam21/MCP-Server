@@ -3,9 +3,13 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const complaint = require('./routes/complaint');
 const auth = require('./routes/auth')
+const jwt = require('jsonwebtoken');
+const secret = require('./config/jwt.json')
+const dbconfig = require('./config/db.json')
 
 const app = express();
 
+app.set('Secret', secret.secretkey);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -14,7 +18,7 @@ let mongooseOptions = {
   useNewUrlParser: true, 
   useUnifiedTopology: true
 }
-mongoose.connect('mongodb+srv://nikhil:TOOR123@cluster0-jhtvk.mongodb.net/test?retryWrites=true&w=majority', mongooseOptions);
+mongoose.connect(dbconfig.mongodb_connection_string, mongooseOptions);
 mongoose.Promise = global.Promise;
 
 app.use(function (req, res, next) {
