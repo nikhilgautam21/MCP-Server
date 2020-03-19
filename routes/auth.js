@@ -1,8 +1,7 @@
 const express = require('express')
 const router = express.Router();
-const {googleAuthController} = require('../controllers/index')
-const {googleAuthCallBackController} = require('../controllers/index')
-const {yahooController} = require('../controllers/index')
+const {googleAuthController} = require('../controllers/authController')
+const {yahooController} = require('../controllers/authController')
 
 router.get('/google', googleAuthController )
 router.get('/yahoo', yahooController)

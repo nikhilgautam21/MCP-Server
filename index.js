@@ -1,8 +1,9 @@
 const express = require('express')
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const complaint = require('./routes/complaint');
-const auth = require('./routes/auth')
+const complaintRoute = require('./routes/complaint');
+const userRoute = require('./routes/user')
+const authRoute = require('./routes/auth')
 const jwt = require('jsonwebtoken');
 const secret = require('./config/jwt.json')
 const dbconfig = require('./config/db.json')
@@ -28,8 +29,9 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use('/api/complaint', complaint);
-app.use('/auth', auth)
+app.use('/api/complaint', complaintRoute);
+app.use('/api/user', userRoute)
+app.use('/auth', authRoute)
 
 app.listen(port);
 console.log("Server Listening at port " + port);

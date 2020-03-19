@@ -23,7 +23,9 @@ const googleAuthController = async (req, res, next) => {
                 email: resp.body.email,
                 role: "user"
             }).then(function (data) {
-                res.json({
+                const token = data.generateAuthToken();
+                console.log(token,"token IF")
+                res.header("x-auth-token", token).json({
                     id: data._id,
                     name: data.name,
                     email : data.email,

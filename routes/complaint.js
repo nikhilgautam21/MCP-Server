@@ -8,4 +8,5 @@ const auth = require('../middlewares/auth')
 router.post('/add', auth, addComplaintController )
 router.post('/updatestatus',auth,updateComplaintStatusController)
 router.get('/all-complaints',auth, allComplaintsController)
+
 module.exports = router
