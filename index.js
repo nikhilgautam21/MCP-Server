@@ -31,7 +31,7 @@ app.use(function (req, res, next) {
 
 app.use('/api/complaint', complaintRoute);
 app.use('/api/user', userRoute)
-app.use('/auth', authRoute)
+app.use('/api/auth', authRoute)
 
 app.listen(port);
 console.log("Server Listening at port " + port);

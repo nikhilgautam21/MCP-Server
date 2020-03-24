@@ -4,11 +4,13 @@
   "description": "mcp-server",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.644.0",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "google-auth-library": "^5.10.1",
