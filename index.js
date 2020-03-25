@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const secret = require('./config/jwt.json')
 const dbconfig = require('./config/db.json')
 const indexRoute = require('./routes/index')
+require('dotenv').config();
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.set('Secret', secret.secretkey);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const port = process.env.port || "5000";
+const port = process.env.PORT || "5000";
 let mongooseOptions = {
   useNewUrlParser: true, 
   useUnifiedTopology: true

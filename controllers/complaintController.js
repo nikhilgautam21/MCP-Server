@@ -3,11 +3,12 @@ const mongoose = require("mongoose")
 var Complaint = mongoose.model("Complaint", ComplaintSchema)
 const AWS = require('aws-sdk');
 const fs = require('fs');
-const awsconfig = require('../config/aws.json')
 const images = require("../config/image.json")
+require('dotenv').config();
 
 const addComplaintController = async (req, res, next) => {
     let complaint = req.body
+    console.log(process.env.access_key, "ENV")
     let id = req.user._id
     complaint["userid"] = id
     let number;
@@ -36,9 +37,9 @@ const addComplaintController = async (req, res, next) => {
 const uploadPics = async (images, complaint_id) => {
     let images_url = []
     AWS.config.update({
-        accessKeyId: awsconfig.access_key,
-        secretAccessKey: awsconfig.secret_key,
-        region: awsconfig.region
+        accessKeyId: process.env.access_key,
+        secretAccessKey: process.env.secret_key,
+        region: process.env.region
     })
     images.forEach(async (image) => {
 
@@ -50,7 +51,7 @@ const uploadPics = async (images, complaint_id) => {
         var s3 = new AWS.S3();
 
         const params = {
-            Bucket: awsconfig.bucket_name,
+            Bucket: process.env.bucket_name,
             Key: imageRemoteName, // type is not required
             Body: base64Data,
             ACL: 'public-read',
