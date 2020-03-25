@@ -7,6 +7,7 @@ const authRoute = require('./routes/auth')
 const jwt = require('jsonwebtoken');
 const secret = require('./config/jwt.json')
 const dbconfig = require('./config/db.json')
+const indexRoute = require('./routes/index')
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use(function (req, res, next) {
 app.use('/api/complaint', complaintRoute);
 app.use('/api/user', userRoute)
 app.use('/api/auth', authRoute)
+app.use('/',indexRoute)
 
 app.listen(port);
 console.log("Server Listening at port " + port);
