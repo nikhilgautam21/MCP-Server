@@ -3,9 +3,10 @@ const User = require('../models/userSchema');
 
 
 const googleAuthController = async (req, res, next) => {
-    console.log("LOGIN",req.body.googletoken)
+    console.log("LOGIN",req.body)
     let token = req.body.googletoken
     request(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${token}`, { json: true }, async (err, resp, body) => {
+       // console.log(resp.body,"Google")
         let user = await User.findOne({ google_id: resp.body.id })
         if (user) {
             const token = user.generateAuthToken();
