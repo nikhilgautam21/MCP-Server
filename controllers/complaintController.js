@@ -8,7 +8,6 @@ require('dotenv').config();
 
 const addComplaintController = async (req, res, next) => {
     let complaint = req.body
-    console.log(process.env.access_key, "ENV")
     let id = req.user._id
     complaint["userid"] = id
     let number;
@@ -21,10 +20,10 @@ const addComplaintController = async (req, res, next) => {
         }
         complaint["complaint_number"] = Number(number) + 1;
 
-        Complaint.create(complaint).then(async (data) => {
-            let images_url = await uploadPics(complaint["images"], data._id)
-            console.log(images_url, "images_url")
-            await res.status(200).send(data)
+        Complaint.create(complaint).then((data) => {
+            // let images_url = await uploadPics(complaint["images"], data._id)
+            // console.log(images_url, "images_url")
+             res.status(200).send(data)
         }, err => {
             res.json({
                 msg: err,
@@ -34,8 +33,12 @@ const addComplaintController = async (req, res, next) => {
     });
 }
 
-const uploadPics = async (images, complaint_id) => {
+const uploadComplaintPicsController = async (req,res,next) => {
+    let images = req.body.images
+    let complaint_id = req.body.complaint_id
+
     let images_url = []
+
     AWS.config.update({
         accessKeyId: process.env.access_key,
         secretAccessKey: process.env.secret_key,
@@ -43,20 +46,19 @@ const uploadPics = async (images, complaint_id) => {
     })
     images.forEach(async (image) => {
 
-        const base64 = image
-        const base64Data = new Buffer.from(base64.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-        const type = base64.split(';')[0].split('/')[1];
-        const imageRemoteName = `MCP_Complaint_${complaint_id}_${new Date().getTime()}.jpeg`
+        // const base64 = image
+        // const base64Data = new Buffer.from(base64.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+        //const type = base64.split(';')[0].split('/')[1];
+        //const imageRemoteName = `MCP_Complaint_${complaint_id}_${new Date().getTime()}.jpeg`
 
         var s3 = new AWS.S3();
 
         const params = {
             Bucket: process.env.bucket_name,
-            Key: imageRemoteName, // type is not required
-            Body: base64Data,
+            Key: image.localURL,
+            Body: image.name,
             ACL: 'public-read',
-            ContentEncoding: 'base64', // required
-            ContentType: `image/${type}`
+            ContentType: `image/jpeg`
         }
 
         let location = ''
@@ -72,12 +74,12 @@ const uploadPics = async (images, complaint_id) => {
 
         //console.log(location, key)
     })
-    return images_url
+    res.send(images_url);
 }
 
 
-const lastComplaintNumber = () => {
-}
+// const lastComplaintNumber = () => {
+// }
 
 
 const updateComplaintStatusController = async (req, res, next) => {
@@ -106,5 +108,6 @@ const allComplaintsController = async (req, res, next) => {
 module.exports = {
     addComplaintController,
     updateComplaintStatusController,
-    allComplaintsController
+    allComplaintsController,
+    uploadComplaintPicsController
 }

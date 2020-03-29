@@ -3,20 +3,22 @@ const User = require('../models/userSchema');
 
 
 const googleAuthController = async (req, res, next) => {
-    console.log("LOGIN",req.body)
+    console.log("LOGIN", req.body)
     let token = req.body.googletoken
     request(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${token}`, { json: true }, async (err, resp, body) => {
-       // console.log(resp.body,"Google")
+        // console.log(resp.body,"Google")
         let user = await User.findOne({ google_id: resp.body.id })
         if (user) {
             const token = user.generateAuthToken();
-            console.log(token,"token IF")
-            res.header("x-auth-token", token).send({
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-              });
+            res.send({
+                "user": {
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                },
+                "x-auth-token": token
+            });
         }
         else {
             User.create({
@@ -26,13 +28,15 @@ const googleAuthController = async (req, res, next) => {
                 role: "user"
             }).then(function (data) {
                 const token = data.generateAuthToken();
-                console.log(token,"token IF")
-                res.header("x-auth-token", token).json({
-                    id: data._id,
-                    name: data.name,
-                    email : data.email,
-                    role : data.role
-                })
+                res.send({
+                    "user": {
+                        _id: user._id,
+                        name: user.name,
+                        email: user.email,
+                        role: user.role,
+                    },
+                    "x-auth-token": token
+                });
             }).catch((err) => {
                 res.send(err)
             })

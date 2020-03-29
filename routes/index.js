@@ -6,4 +6,4 @@ router.get('/home', function(req,res,err){
     res.send("Hello")
 })
 
-module.exports = router;
+module.exports = router; 
