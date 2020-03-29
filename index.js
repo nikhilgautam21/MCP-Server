@@ -13,12 +13,16 @@ require('dotenv').config();
 const app = express();
 
 app.set('Secret', secret.secretkey);
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true,
+  parameterLimit: 100000,
+  limit: '50mb'
+}));
 app.use(bodyParser.json());
 
 const port = process.env.PORT || "5000";
 let mongooseOptions = {
-  useNewUrlParser: true, 
+  useNewUrlParser: true,
   useUnifiedTopology: true
 }
 mongoose.connect(dbconfig.mongodb_connection_string, mongooseOptions);
@@ -34,7 +38,7 @@ app.use(function (req, res, next) {
 app.use('/api/complaint', complaintRoute);
 app.use('/api/user', userRoute)
 app.use('/api/auth', authRoute)
-app.use('/',indexRoute)
+app.use('/', indexRoute)
 
 app.listen(port);
 console.log("Server Listening at port " + port);

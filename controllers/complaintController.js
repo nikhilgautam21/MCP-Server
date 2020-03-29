@@ -49,14 +49,14 @@ const uploadComplaintPicsController = async (req,res,next) => {
         // const base64 = image
         // const base64Data = new Buffer.from(base64.replace(/^data:image\/\w+;base64,/, ""), 'base64');
         //const type = base64.split(';')[0].split('/')[1];
-        //const imageRemoteName = `MCP_Complaint_${complaint_id}_${new Date().getTime()}.jpeg`
+        const imageRemoteName = `MCP_Complaint_${new Date().getTime()}.jpeg`
 
         var s3 = new AWS.S3();
 
         const params = {
             Bucket: process.env.bucket_name,
-            Key: image.localURL,
-            Body: image.name,
+            Key: imageRemoteName,
+            Body: image,
             ACL: 'public-read',
             ContentType: `image/jpeg`
         }
