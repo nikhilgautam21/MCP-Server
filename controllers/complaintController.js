@@ -56,7 +56,7 @@ const uploadComplaintPicsController = async (req,res,next) => {
         const params = {
             Bucket: process.env.bucket_name,
             Key: imageRemoteName,
-            Body: image,
+            Body: image.name[0],
             ACL: 'public-read',
             ContentType: `image/jpeg`
         }
