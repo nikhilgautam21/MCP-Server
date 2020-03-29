@@ -37,6 +37,7 @@ const uploadComplaintPicsController = async (req,res,next) => {
     let images = req.body.images
     let complaint_id = req.body.complaint_id
 
+    console.log(req.body)
     let images_url = []
 
     AWS.config.update({
@@ -46,19 +47,20 @@ const uploadComplaintPicsController = async (req,res,next) => {
     })
     images.forEach(async (image) => {
 
-        // const base64 = image
-        // const base64Data = new Buffer.from(base64.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-        //const type = base64.split(';')[0].split('/')[1];
+        const base64 = image
+        const base64Data = new Buffer.from(base64.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+        const type = base64.split(';')[0].split('/')[1];
         const imageRemoteName = `MCP_Complaint_${new Date().getTime()}.jpeg`
 
         var s3 = new AWS.S3();
 
         const params = {
             Bucket: process.env.bucket_name,
-            Key: imageRemoteName,
-            Body: image.name[0],
+            Key: imageRemoteName, // type is not required
+            Body: base64Data,
             ACL: 'public-read',
-            ContentType: `image/jpeg`
+            ContentEncoding: 'base64', // required
+            ContentType: `image/${type}`
         }
 
         let location = ''
