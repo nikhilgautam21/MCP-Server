@@ -10,7 +10,7 @@ const googleAuthController = async (req, res, next) => {
         let user = await User.findOne({ google_id: resp.body.id })
         if (user) {
             const token = user.generateAuthToken();
-            res.send({
+            res.json({
                 "user": {
                     _id: user._id,
                     name: user.name,
@@ -28,7 +28,7 @@ const googleAuthController = async (req, res, next) => {
                 role: "user"
             }).then(function (data) {
                 const token = data.generateAuthToken();
-                res.send({
+                res.json({
                     "user": {
                         _id: user._id,
                         name: user.name,
