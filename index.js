@@ -15,10 +15,10 @@ const app = express();
 app.set('Secret', secret.secretkey);
 app.use(bodyParser.urlencoded({
   extended: true,
-  parameterLimit: 100000,
+  parameterLimit: 50000,
   limit: '50mb'
 }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: "50mb"}));
 
 const port = process.env.PORT || "5000";
 let mongooseOptions = {
