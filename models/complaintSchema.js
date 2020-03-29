@@ -30,9 +30,12 @@ const complaintSchema = new mongoose.Schema({
         type: Number,
         required: [true, "Number is required" ]
     },
+    images:{
+        type: Array
+    },
     userid: {type: Schema.Types.ObjectId, ref: 'User'}
  
-})
+},{timestamps: true} )
 
 //const Complaint = mongoose.model('user', complaintSchema);
 module.exports = complaintSchema;

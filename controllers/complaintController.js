@@ -11,7 +11,8 @@ const addComplaintController = async (req, res, next) => {
     let id = req.user._id
     complaint["userid"] = id
     let number;
-    Complaint.findOne({}, {}, { sort: { 'created_at': 1 } }, function (err, data) {
+    // Getting latest Complaint Number
+    Complaint.findOne({}, {}, { sort: { 'createdAt': -1 } }, function (err, data) {
         if (data != null) {
             number = data.complaint_number
         }
@@ -21,8 +22,6 @@ const addComplaintController = async (req, res, next) => {
         complaint["complaint_number"] = Number(number) + 1;
 
         Complaint.create(complaint).then((data) => {
-            // let images_url = await uploadPics(complaint["images"], data._id)
-            // console.log(images_url, "images_url")
              res.status(200).send(data)
         }, err => {
             res.json({
@@ -37,7 +36,6 @@ const uploadComplaintPicsController = async (req,res,next) => {
     let images = req.body.images
     let complaint_id = req.body.complaint_id
 
-    console.log(req.body)
     let images_url = []
 
     AWS.config.update({
@@ -45,12 +43,12 @@ const uploadComplaintPicsController = async (req,res,next) => {
         secretAccessKey: process.env.secret_key,
         region: process.env.region
     })
-    images.forEach(async (image) => {
+    images.forEach((image,index) => {
 
         const base64 = image
         const base64Data = new Buffer.from(base64.replace(/^data:image\/\w+;base64,/, ""), 'base64');
         const type = base64.split(';')[0].split('/')[1];
-        const imageRemoteName = `MCP_Complaint_${new Date().getTime()}.jpeg`
+        const imageRemoteName = `MCP_Complaint_${complaint_id}_${new Date().getTime()}.jpeg`
 
         var s3 = new AWS.S3();
 
@@ -62,26 +60,18 @@ const uploadComplaintPicsController = async (req,res,next) => {
             ContentEncoding: 'base64', // required
             ContentType: `image/${type}`
         }
-
-        let location = ''
-        let key = ''
-        try {
-            const { Location, Key } = await s3.upload(params).promise();
-            location = Location;
-            key = Key
-            images_url.push(location)
-        } catch (e) {
-            console.log(e)
-        }
-
-        //console.log(location, key)
+            s3.upload(params,function(err, data){
+                images_url.push(data.Location)
+                if(index == images.length-1){
+                    //res.send(images_url);
+                    let data = { "images": images_url}
+                    Complaint.findOneAndUpdate({ _id: complaint_id }, data, {useFindAndModify: false,new: true, strict: false}).then(function (data) {
+                        res.status(200).send(data)
+                    })
+                }
+            })
     })
-    res.send(images_url);
 }
-
-
-// const lastComplaintNumber = () => {
-// }
 
 
 const updateComplaintStatusController = async (req, res, next) => {

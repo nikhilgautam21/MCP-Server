@@ -8,7 +8,7 @@ const auth = require('../middlewares/auth')
 
 router.post('/add', auth, addComplaintController )
 router.post('/updatestatus',auth,updateComplaintStatusController)
-router.get('/all', allComplaintsController)
-router.post('/uploadimages',uploadComplaintPicsController)
+router.get('/all', auth, allComplaintsController)
+router.post('/uploadimages',auth,uploadComplaintPicsController)
 
 module.exports = router
