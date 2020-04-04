@@ -86,8 +86,12 @@ const updateComplaintStatusController = async (req, res, next) => {
     })
 }
 
-const allComplaintsController = async (req, res, next) => {
-    Complaint.find().then(function (complaints) {
+const userComplaintsController = async (req, res, next) => {
+   let userid  = req.user._id
+   let ObjectId = require('mongoose').Types.ObjectId; 
+   let query ={userid : new ObjectId(userid) }
+    Complaint.find(query).then(function (complaints) {
+        console.log(complaints,"complaint")
         let data = complaints.map(item => {
             delete item["userid"]
             return item
@@ -96,10 +100,23 @@ const allComplaintsController = async (req, res, next) => {
     })
 }
 
+const allComplaintsController = async (req, res, next) => {
+     Complaint.find(query).then(function (complaints) {
+         console.log(complaints,"complaint")
+         let data = complaints.map(item => {
+             delete item["userid"]
+             return item
+         })
+         res.send(data)
+     })
+ }
+ 
+
 
 module.exports = {
     addComplaintController,
     updateComplaintStatusController,
-    allComplaintsController,
-    uploadComplaintPicsController
+    userComplaintsController,
+    uploadComplaintPicsController,
+    allComplaintsController
 }
