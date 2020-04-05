@@ -91,7 +91,6 @@ const userComplaintsController = async (req, res, next) => {
    let ObjectId = require('mongoose').Types.ObjectId; 
    let query ={userid : new ObjectId(userid) }
     Complaint.find(query).then(function (complaints) {
-        console.log(complaints,"complaint")
         let data = complaints.map(item => {
             delete item["userid"]
             return item
@@ -101,8 +100,7 @@ const userComplaintsController = async (req, res, next) => {
 }
 
 const allComplaintsController = async (req, res, next) => {
-     Complaint.find(query).then(function (complaints) {
-         console.log(complaints,"complaint")
+     Complaint.find().then(function (complaints) {
          let data = complaints.map(item => {
              delete item["userid"]
              return item
