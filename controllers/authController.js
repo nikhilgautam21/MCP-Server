@@ -1,6 +1,7 @@
 const request = require('request');
 const User = require('../models/userSchema');
-
+const bcrypt = require('bcryptjs');
+const Admin = require('../models/adminSchema');
 
 const googleAuthController = async (req, res, next) => {
     let token = req.body.googletoken
@@ -53,7 +54,57 @@ const yahooController = async (req, res, next) => {
     res.send("YAHOOO")
 }
 
+const adminAuthController = async (req,res,next) =>{
+    if(req.body.username && req.body.password){
+        let admin  = await Admin.findOne({username:req.body.username})
+        if(admin){
+            bcrypt.compare(req.body.password,admin.password, function(err,compareResult){
+                if(err){
+                    res.json({ "message":err})
+                }
+                if(compareResult){
+                    let token  = admin.generateAuthToken();
+                    let user = {"username":admin.username}
+                    res.json({"x-auth-token":token,"admin":user})
+                }else{
+                    res.json({"message":"Invalid Password"})
+                } 
+            })
+        }else{
+            res.json({
+                "messsage":"No admin exist with this username"
+            })
+        }
+    }else{
+        res.json({
+            "message": "Please send username and password"
+        })
+    }
+}
+
+const createAdminController = async (req,res,next) =>{
+    console.log("CreateAdmin",req.body)
+    if(req.body.username && req.body.password){
+        let hash = await bcrypt.hash(req.body.password, 10)
+        let admin = {
+            username:  req.body.username,
+            password: hash
+        }
+        Admin.create(admin).then(function(data){
+            res.json(data)
+        }).catch(function(err){
+            -res.json(err)
+        })
+    }else{
+        res.json({
+            "message": "Please provide username and password"
+        })
+    }
+}
+
 module.exports = {
     googleAuthController,
-    yahooController
+    yahooController,
+    adminAuthController,
+    createAdminController
 }
