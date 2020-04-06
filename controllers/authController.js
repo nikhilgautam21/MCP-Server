@@ -65,18 +65,20 @@ const adminAuthController = async (req,res,next) =>{
                 if(compareResult){
                     let token  = admin.generateAuthToken();
                     let user = {"username":admin.username}
-                    res.json({"x-auth-token":token,"admin":user})
+                    res.json({"success":true,"x-auth-token":token,"admin":user})
                 }else{
-                    res.json({"message":"Invalid Password"})
+                    res.json({"success":false,"message":"Invalid Password"})
                 } 
             })
         }else{
             res.json({
+                "success": false,
                 "messsage":"No admin exist with this username"
             })
         }
     }else{
         res.json({
+            "success":false,
             "message": "Please send username and password"
         })
     }
