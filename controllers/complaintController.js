@@ -1,9 +1,10 @@
 const ComplaintSchema = require('../models/complaintSchema')
 const mongoose = require("mongoose")
 var Complaint = mongoose.model("Complaint", ComplaintSchema)
+const User = require('../models/userSchema');
 const AWS = require('aws-sdk');
-const fs = require('fs');
-const images = require("../config/image.json")
+var nodemailer = require('nodemailer');
+
 require('dotenv').config();
 
 const addComplaintController = async (req, res, next) => {
@@ -81,8 +82,15 @@ const updateComplaintStatusController = async (req, res, next) => {
         useFindAndModify: false,
         new: true
     }
-    Complaint.findOneAndUpdate({ _id: id }, data, options).then(function (data) {
-        res.status(200).send(data)
+    Complaint.findOneAndUpdate({ _id: id }, data, options).then(function (updatedData) {
+        let userid = updatedData["userid"]
+        let ObjectId = require('mongoose').Types.ObjectId; 
+        let query ={_id : new ObjectId(userid) }
+        User.find(query).then(function(user){
+            sendMail(user[0]["email"],updatedData);
+        })
+        res.status(200).send(updatedData)
+
     })
 }
 
@@ -107,6 +115,30 @@ const allComplaintsController = async (req, res, next) => {
          })
          res.send(data)
      })
+ }
+
+ const sendMail = (email, complaint) =>{
+    var transporter = nodemailer.createTransport({
+        host: process.env.smtp_host,
+        auth: {
+          user: process.env.smtp_email,
+          pass: process.env.smtp_pass
+        }
+      });
+      var mailOptions = {
+        from: process.env.smtp_email,
+        to: email,
+        subject: 'Complaint Status Changed',
+        text: `Your complaint number ${complaint.complaint_number} has been changed to ${complaint.status}`
+      };
+
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
  }
  
 

@@ -19,8 +19,7 @@ const complaintSchema = new mongoose.Schema({
         required: [true, "date is required"]
     },
     notes:{
-        type: String,
-        required: [true, "notes is required"]
+        type: String
     },
     status:{
         type: String,
